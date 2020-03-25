@@ -3,6 +3,8 @@ package org.deafsapps.android.mapmanager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -16,15 +18,24 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
     private GoogleMap map;
+    public static final int DEFAULT_INT_VALUE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.activity_maps__fr__map);
         mapFragment.getMapAsync(this);
+
+        final Button btnClearMap = findViewById(R.id.activity_maps__btn__clear_map);
+        btnClearMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                map.clear();
+            }
+        });
     }
 
     /**
@@ -45,7 +56,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                map.clear();
                 map.addMarker(new MarkerOptions().position(latLng).title("New location"));
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 8.0f));
             }
@@ -53,7 +63,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         map.setOnInfoWindowClickListener(this);
 
         // add a marker in Sydney and move the camera
-        LatLng seville = new LatLng(37.4, -5.98);
+        final LatLng seville = new LatLng(37.4, -5.98);
         map.addMarker(new MarkerOptions().position(seville).title("Marker in Seville"));
         map.moveCamera(CameraUpdateFactory.newLatLng(seville));
     }
